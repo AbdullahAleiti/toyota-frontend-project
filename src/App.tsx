@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -14,7 +13,7 @@ const router = createBrowserRouter([
   },
   {
     path:"/test",
-    element: Terminals()
+    element: <Terminals/>
   }
 ]);
 

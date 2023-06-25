@@ -1,10 +1,11 @@
-export type department = {
-    name:string,
-    shopCode: string,
-    filters: filter[]
+export type Department = {
+    depName?:string,
+    depCode?:string,
+    shopCode?: string,
+    filterBaseds?: FilterBased[]
 }
 
-type filter = {
-    code:string,
-    linkCount:number
+export type FilterBased = {
+    filterCode?:string,
+    linkCount?:number
 }
