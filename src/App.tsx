@@ -1,30 +1,34 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
 import './App.css'
 
-import Terminals from './routes/terminals';
+import { RouterProvider, createRouter } from '@tanstack/react-router'
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <div>Hello world!</div>,
-  },
-  {
-    path:"/test",
-    element: <Terminals/>
+// Import the generated route tree
+import { routeTree } from './routeTree.gen'
+import { QueryClientProvider,QueryClient } from '@tanstack/react-query'
+
+// Create a new router instance
+const queryClient = new QueryClient()
+
+const router = createRouter({ 
+  routeTree , 
+  context:{queryClient,},
+})
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
   }
-]);
+}
 
 function App() {
 
   return (
-    <>
-      <div>
+    <div>
+      <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-      </div>
-    </>
+      </QueryClientProvider>
+    </div>
   )
 }
 

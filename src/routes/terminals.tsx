@@ -1,5 +1,4 @@
-import { Department , FilterBased } from "../domain";
-import terminalsData from "../mock-data/terminal.json"
+import { Department , FilterBased, Terminal } from "../Domain";
 import {
     getCoreRowModel,
     ColumnDef,
@@ -8,13 +7,32 @@ import {
     createColumnHelper,
     Cell
   } from '@tanstack/react-table'
-import { useState } from 'react'
+import {useQuery,useQueryClient} from '@tanstack/react-query'
+import { Badge,Table,TableBody,TableContainer,TableHead,TableRow,TableCell,Button} from "@mui/material";
+import { useEffect, useState } from 'react'
+import { useTranslation, initReactI18next } from "react-i18next";
+
+import { LazyRoute, createLazyFileRoute , Link, createRoute, createFileRoute} from '@tanstack/react-router'
+import axios from "axios";
+
+export const Route : any = createFileRoute("/terminals")({
+  component: Terminals
+})
 
 const columnHelper = createColumnHelper<Department[]>()
-/*
-function FilterBox({props : Department}) : Cell<Department,Department[]>{
-    return <div></div>
-}*/
+
+function useTerminals() {
+    return useQuery({
+        queryKey: ['terminals'],
+        queryFn: async () => {
+            const { data } = await axios.get(
+                'https://api.sunucu.com/terminals',
+            )
+            return data
+        }
+    })
+}
+
 const columns : ColumnDef<Department>[] = [
     {
         header: "TÜM TERMINALLER",
@@ -30,11 +48,16 @@ const columns : ColumnDef<Department>[] = [
                 accessorKey: "filterBaseds",
                 //accessorFn: (filter)=>{(filter.filterBaseds as FilterBased).filterCode},
                 cell: (info) => (
-                    <div key={info.cell.id}>
-                        {info.cell.getValue().map((filter : FilterBased) => {
-                            return <div className="filter">{filter.filterCode}</div>
-                        })}
-                    </div>
+                    <>
+                        {info.cell.getValue().map((filter : FilterBased,i:number) =>
+                            <Link to="/terminal/$terminalId" 
+                            params={{terminalId:filter.filterCode}} key={i}>
+                                <Badge badgeContent={filter.linkCount} color="secondary" sx={{margin:1}}>
+                                    <Button sx={{ borderColor: 'grey.500' ,border:1}} className="filter">{filter.filterCode}</Button>
+                                </Badge>
+                            </Link>
+                        )}
+                    </>
                 ),
                 footer: info => info.column.id
             }
@@ -42,49 +65,53 @@ const columns : ColumnDef<Department>[] = [
     },
 ]
 
-export default function Terminals() {
-    const [data,setData] = useState(()=>{
-        const filteredData : Department[] = []
-        terminalsData.data.map(({depCode,shopCode,depName,filterBaseds})=>{
-            const new_filterBaseds : FilterBased[] =  filterBaseds.map(obj => {
+function Terminals() {
+    const { status, data, error, isFetching } = useTerminals()
+    const [filteredData,setFilteredData] = useState<Department[]>([])
+    useEffect(()=>{
+        const filteredData : Department[] = [];
+        if(Array.isArray(data?.data)){
+        (data?.data as Department[]).forEach(({depCode,shopCode,depName,filterBaseds})=>{
+            const new_filterBaseds : FilterBased[] =  (filterBaseds as FilterBased[]).map(obj => {
                 const { userDesc, termName, ...rest } = obj; // Destructure the object and exclude userDesc and termName keys
                 return rest; // Return the modified object without userDesc and termName
             });
             const obj : Department = {depCode,shopCode,depName,filterBaseds:new_filterBaseds}
             filteredData.push(obj)
         }) 
-        return filteredData
-    })
+        setFilteredData(filteredData)
+        console.log(filteredData)
+        }
+    },[data])
 
-    const table = useReactTable({columns,data,getCoreRowModel: getCoreRowModel()}) 
-
+    const table = useReactTable({columns,data:filteredData ,getCoreRowModel: getCoreRowModel()}) 
+    if (filteredData.length < 1) return <div>Never mind!</div>
     return (
-      <div>
-        <table style={{width:"100%"}}>
-            <thead>
+      <TableContainer>
+        <Table style={{width:"100%",textAlign:"center"}}>
+            <TableHead>
                 {table.getHeaderGroups().map(hg => (
-                    <tr key={hg.id}>
+                    <TableRow key={hg.id}>
                         {hg.headers.map(header => (
-                            <th key={header.id}>{flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}</th>
+                            <TableCell key={header.id} style={{color:"#D32720",textDecoration:"underline",fontWeight:"bold"}}>
+                                {flexRender(header.column.columnDef.header,header.getContext())}
+                            </TableCell>
                         ))}
-                    </tr>
+                    </TableRow>
                 ))}
-            </thead>
-            <tbody>
+            </TableHead>
+            <TableBody>
                 {table.getRowModel().rows.map(row => (
-                    <tr key={row.id}>
+                    <TableRow key={row.id}>
                         {row.getVisibleCells().map(cell => (
-                            <td key={cell.id}>
+                            <TableCell key={cell.id}>
                             {flexRender(cell.column.columnDef.cell,cell.getContext())}
-                            </td>
+                            </TableCell>
                         ))}
-                    </tr>
+                    </TableRow>
                 ))}
-            </tbody>
-        </table>
-      </div>
+            </TableBody>
+        </Table>
+      </TableContainer>
       )
 }
