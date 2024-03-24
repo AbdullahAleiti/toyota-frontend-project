@@ -23,20 +23,20 @@ export const handlers = [
       },
     });
   }),
-  http.get("https://api.sunucu.com/defect/header/:id",({params})=>{
-    const {id} = params
-    if (parseInt(String(id)) == 123){
+  http.get("https://api.sunucu.com/defect/header/:id", ({ params }) => {
+    const { id } = params;
+    if (parseInt(String(id)) == 123) {
       return HttpResponse.json(other["anotherDefectPage"]["defect-header"]);
     } else {
       return HttpResponse.json(other["exampleDefectPage"]["defect-header"]);
     }
   }),
-  http.get("https://api.sunucu.com/defect/screen/:id",({params})=>{
-    const {id} = params
-    if (parseInt(String(id)) == 123){
+  http.get("https://api.sunucu.com/defect/screen/:id", ({ params }) => {
+    const { id } = params;
+    if (parseInt(String(id)) == 123) {
       return HttpResponse.json(other["anotherDefectPage"]["defect-screen"]);
     } else {
       return HttpResponse.json(other["exampleDefectPage"]["defect-screen"]);
     }
-  })
+  }),
 ];
