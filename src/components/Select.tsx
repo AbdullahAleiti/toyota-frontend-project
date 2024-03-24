@@ -1,17 +1,34 @@
-import {useRef,useState} from "react";
-import S, {Props,SelectInstance} from "react-select";
+import { useEffect, useRef,useState,MouseEvent,forwardRef, RefObject, Ref,useImperativeHandle, CSSProperties} from "react";
+import S, {Props as reactSelectProps,SelectInstance} from "react-select";
 import { useClickOutside } from "../utils";
-import { Button ,ButtonBase, ButtonBaseProps} from '@mui/material'
+import { Button } from '@mui/material'
 
-export default function Select({options} : Props){
+export type FocusHandle = {
+    focus: ()=>void
+}
+
+type Props = reactSelectProps & {onClickOutside?: ()=>void,style?: CSSProperties}
+
+const Select = forwardRef<FocusHandle,Props>(({onChange,options,className,onMenuClose,menuIsOpen : isOpenProp,onClickOutside,style} : Props ,ref) => {
     const selectRef = useRef<SelectInstance>(null)
     const menuRef = useRef<HTMLDivElement | null>(null)
     const controlRef = useRef<HTMLDivElement | null>(null)
-    const upButton  = useRef(null)
-    const downButton  = useRef(null)
-    const [menuIsOpen,setMenuIsOpen] = useState(false)
+    const scrollButtons  = useRef<HTMLDivElement | null>(null)
+    const [menuIsOpen,setMenuIsOpen] = useState(isOpenProp === undefined ? false : isOpenProp)
+    const [isListening,setIsListening]  = useState(false)
 
-    const scrollDown = ()=>{
+    useImperativeHandle(ref, () => {
+        return {
+          focus() {
+            console.log("focused")
+            selectRef.current?.focus();
+          }
+        };
+      },);
+
+    const scrollDown = (e : MouseEvent<HTMLButtonElement>)=>{
+        //e.preventDefault()
+        //e.stopPropagation()
         selectRef.current?.focusOption("pagedown")
         selectRef.current?.focus()
     }
@@ -23,27 +40,50 @@ export default function Select({options} : Props){
 
     menuRef.current = (selectRef.current?.menuListRef) as typeof menuRef.current
     controlRef.current = (selectRef.current?.controlRef) as typeof controlRef.current
-  
-    useClickOutside( [controlRef,menuRef,downButton,upButton] ,()=>{
-        console.log("clicked outside.");
-        setMenuIsOpen(false)
+    
+    useEffect(()=>{
+        const timer = setTimeout(() => {
+            setIsListening(true);
+          }, 500);
+        
+        return () => clearTimeout(timer);
+    },[isListening])
+
+    useClickOutside( [controlRef,menuRef,scrollButtons] ,()=>{
+        if(isListening) {
+            console.log("clicked outside.")
+            setMenuIsOpen(false)
+            if(onClickOutside){
+                onClickOutside()
+            }
+        }
     })
 
     return (
-        <div className="relative">
-            <S
-            options={options}
-            ref={selectRef} 
-            menuIsOpen={menuIsOpen} 
-            onChange={()=>{setMenuIsOpen(false)}}
-            onMenuOpen={()=>{setMenuIsOpen(true)}}
-            />
-            { menuIsOpen && (
-            <div className="absolute right-[-80px] flex flex-col">
-                <Button onClick={scrollUP} ref={upButton}>Up</Button>
-                <Button onClick={scrollDown} ref={downButton}>Down</Button>
+        <div className={className} style={style}>
+            <div className="relative">
+                <S
+                blurInputOnSelect={false}
+                options={options}
+                menuIsOpen={menuIsOpen} 
+                onChange={(value,m)=>{
+                    setMenuIsOpen(false)
+                    if (onChange)
+                        onChange(value,m);
+                }}
+                onMenuClose={onMenuClose}
+                onMenuOpen={()=>{setMenuIsOpen(true)}}
+                ref={selectRef}
+                />
+                { menuIsOpen && (
+                <div className="absolute right-[-84px] flex flex-col" ref={scrollButtons}>
+                    <Button style={{margin:4}} variant="contained" onClick={scrollUP}>Up</Button>
+                    <Button style={{margin:4}} variant="contained" onClick={scrollDown}>Down</Button>
+                </div>
+                )}
             </div>
-            )}
         </div>
     )
-}
+})
+
+export default Select

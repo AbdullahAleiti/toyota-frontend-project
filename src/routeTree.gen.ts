@@ -6,6 +6,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as TerminalsImport } from './routes/terminals'
 import { Route as LoginImport } from './routes/login'
 import { Route as TerminalTerminalIdImport } from './routes/terminal.$terminalId'
+import { Route as DefectDefectIdImport } from './routes/defect.$defectId'
 
 // Create/Update Routes
 
@@ -24,6 +25,11 @@ const TerminalTerminalIdRoute = TerminalTerminalIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const DefectDefectIdRoute = DefectDefectIdImport.update({
+  path: '/defect/$defectId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -34,6 +40,10 @@ declare module '@tanstack/react-router' {
     }
     '/terminals': {
       preLoaderRoute: typeof TerminalsImport
+      parentRoute: typeof rootRoute
+    }
+    '/defect/$defectId': {
+      preLoaderRoute: typeof DefectDefectIdImport
       parentRoute: typeof rootRoute
     }
     '/terminal/$terminalId': {
@@ -48,5 +58,6 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   LoginRoute,
   TerminalsRoute,
+  DefectDefectIdRoute,
   TerminalTerminalIdRoute,
 ])

@@ -22,7 +22,7 @@ export function useClickOutside(elRefs : RefObject<HTMLElement | HTMLDivElement>
 
         const handleClickOutside = (e: MouseEvent) => {
             if (callbackRef.current && !checkContains(e.target as Node,elRefs)) {
-                    callbackRef.current(e);
+                callbackRef.current(e);
             }
         };
   
@@ -32,4 +32,3 @@ export function useClickOutside(elRefs : RefObject<HTMLElement | HTMLDivElement>
         };
     }, [callbackRef, elRefs]);
   }
-  
