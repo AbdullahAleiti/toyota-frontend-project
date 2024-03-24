@@ -1,5 +1,5 @@
 export type FilterBased = {
-  filterCode?: string;
+  filterCode: string;
   linkCount?: number;
   userDesc?: string;
   termName?: string;

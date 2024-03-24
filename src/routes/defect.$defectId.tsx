@@ -219,7 +219,7 @@ function DefectPage() {
                 <Link
                   key={id}
                   to="/defect/$defectId"
-                  params={{ defectId: 123 }}
+                  params={{ defectId: "123" }}
                   disabled={!(box.boxColor == "blue")}
                 >
                   <DefectBox box={box} onClick={(e) => buttonClick(e, box)} />
@@ -252,14 +252,14 @@ function DefectPage() {
         <Grid xs={2}>
           <Stack justifyContent={"space-between"} height={"100vh"}>
             <Stack spacing={3}>
-              <Button variant="contained" disabled>
+              <Button variant="outlined" disabled>
                 HIZLI KAYDET
               </Button>
-              <Button variant="contained" disabled>
+              <Button variant="outlined" disabled>
                 KAYDET VE GEÇ
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 disabled={!(insert == State.enterLocation)}
                 onClick={submitDefect}
               >
@@ -267,10 +267,10 @@ function DefectPage() {
               </Button>
             </Stack>
             <Stack spacing={3}>
-              <Button variant="contained">ARA</Button>
-              <Button variant="contained">TERMİNAL İLK RESMİ</Button>
-              <Button variant="contained">SIK GELEN HATA</Button>
-              <Button variant="contained">MANİFEST</Button>
+              <Button variant="outlined">ARA</Button>
+              <Button variant="outlined">TERMİNAL İLK RESMİ</Button>
+              <Button variant="outlined">SIK GELEN HATA</Button>
+              <Button variant="outlined">MANİFEST</Button>
             </Stack>
           </Stack>
         </Grid>
@@ -282,23 +282,23 @@ function DefectPage() {
             alignItems={"stretch"}
           >
             <Box sx={{ flexGrow: 1, width: 0 }}>
-              <Link to="/terminals" className=" max-w-full">
-                <Button variant="contained">ÇIKIŞ</Button>
+              <Link to="/terminals">
+                <Button variant="outlined" fullWidth>ÇIKIŞ</Button>
               </Link>
             </Box>
-            <Button variant="contained" sx={{ flexGrow: 1, width: 0 }}>
+            <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
               MODEL İLK RESMİ
             </Button>
-            <Button variant="contained" sx={{ flexGrow: 1, width: 0 }}>
+            <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
               GERİ
             </Button>
-            <Button variant="contained" sx={{ flexGrow: 1, width: 0 }}>
+            <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
               HATA LİSTESİ
             </Button>
-            <Button variant="contained" sx={{ flexGrow: 1, width: 0 }}>
+            <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
               TEMİZLE
             </Button>
-            <Button variant="contained" sx={{ flexGrow: 1, width: 0 }}>
+            <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
                 BÜYÜK FONT
             </Button>
           </Stack>
@@ -306,8 +306,7 @@ function DefectPage() {
         <Grid xs={2}>
           {is([State.waitingSubmit, State.enterLocation]) && (
             <h2 className="font-bold text-center max-w-full text-red-600">
-              {" "}
-              {form.defectType}{" "}
+              {form.defectType}
             </h2>
           )}
         </Grid>

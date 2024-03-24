@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Terminal } from "../Domain";
 import axios, { AxiosError } from "axios";
 import Select from "../components/Select";
@@ -37,6 +37,7 @@ const fetchTerminal = async (terminalId: string) => {
 
 function TerminalLogin() {
   const terminalData = Route.useLoaderData();
+  const navigate = useNavigate();
   const [loginError, setLoginError] = useState(false);
   const {
     setValue,
@@ -57,6 +58,7 @@ function TerminalLogin() {
         data
       );
       console.log(response);
+      navigate({to:"/defect/$defectId",params:{defectId:"71835"}})
     } catch (e) {
       setLoginError(true);
     }

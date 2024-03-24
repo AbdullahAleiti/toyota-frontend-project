@@ -28,7 +28,7 @@ import {
 } from "@tanstack/react-router";
 import axios from "axios";
 
-export const Route : any = createFileRoute("/terminals")({
+export const Route = createFileRoute("/terminals")({
   component: Terminals,
 });
 
