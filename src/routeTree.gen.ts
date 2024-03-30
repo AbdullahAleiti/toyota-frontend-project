@@ -4,8 +4,8 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TerminalsImport } from './routes/terminals'
-import { Route as LoginImport } from './routes/login'
 import { Route as TerminalTerminalIdImport } from './routes/terminal.$terminalId'
+import { Route as DefectsFilterCodeImport } from './routes/defects.$filterCode'
 import { Route as DefectDefectIdImport } from './routes/defect.$defectId'
 
 // Create/Update Routes
@@ -15,13 +15,13 @@ const TerminalsRoute = TerminalsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LoginRoute = LoginImport.update({
-  path: '/login',
+const TerminalTerminalIdRoute = TerminalTerminalIdImport.update({
+  path: '/terminal/$terminalId',
   getParentRoute: () => rootRoute,
 } as any)
 
-const TerminalTerminalIdRoute = TerminalTerminalIdImport.update({
-  path: '/terminal/$terminalId',
+const DefectsFilterCodeRoute = DefectsFilterCodeImport.update({
+  path: '/defects/$filterCode',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -34,16 +34,16 @@ const DefectDefectIdRoute = DefectDefectIdImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
     '/terminals': {
       preLoaderRoute: typeof TerminalsImport
       parentRoute: typeof rootRoute
     }
     '/defect/$defectId': {
       preLoaderRoute: typeof DefectDefectIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/defects/$filterCode': {
+      preLoaderRoute: typeof DefectsFilterCodeImport
       parentRoute: typeof rootRoute
     }
     '/terminal/$terminalId': {
@@ -56,8 +56,8 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  LoginRoute,
   TerminalsRoute,
   DefectDefectIdRoute,
+  DefectsFilterCodeRoute,
   TerminalTerminalIdRoute,
 ])

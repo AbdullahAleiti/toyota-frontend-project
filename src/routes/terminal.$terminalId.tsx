@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Terminal } from "../Domain";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import Select from "../components/Select";
 import { useMemo, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";

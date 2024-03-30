@@ -4,7 +4,6 @@ import {
   ColumnDef,
   flexRender,
   useReactTable,
-  createColumnHelper,
   Cell,
 } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
@@ -21,9 +20,7 @@ import {
 import { useEffect, useState } from "react";
 
 import {
-  createLazyFileRoute,
   Link,
-  createRoute,
   createFileRoute,
 } from "@tanstack/react-router";
 import axios from "axios";
@@ -31,8 +28,6 @@ import axios from "axios";
 export const Route = createFileRoute("/terminals")({
   component: Terminals,
 });
-
-const columnHelper = createColumnHelper<Department[]>();
 
 function useTerminals() {
   return useQuery({
@@ -70,6 +65,7 @@ const columns: ColumnDef<Department>[] = [
                   badgeContent={filter.linkCount}
                   color="secondary"
                   sx={{ margin: 1 }}
+                  invisible={filter.linkCount == 1}
                 >
                   <Button
                     sx={{ borderColor: "grey.500", border: 1 }}
@@ -124,7 +120,7 @@ function Terminals() {
   if (filteredData.length < 1) return <div>Never mind!</div>;
   return (
     <TableContainer>
-      <Table style={{ width: "100%", textAlign: "center" }}>
+      <Table style={{ width: "90%", textAlign: "center" }}>
         <TableHead>
           {table.getHeaderGroups().map((hg) => (
             <TableRow key={hg.id}>

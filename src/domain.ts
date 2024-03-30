@@ -49,6 +49,21 @@ export type Defect = {
   defectName: string;
   defectId: number;
 };
+
+export type DefectRecord = {
+  depCode: string; // Bildiren
+  bodyNo: number;
+  vinNo: string;
+  colorExtCode: string;
+  rgbCode: string;
+  modelCode: string;
+  localId: number; // Sicil
+  defectHour: string;
+  defectId: number;
+  assyNo: number;
+  defrespName: string
+};
+
 export type Defects = {
   terminalPictureId: number;
   partDefects: Defect[];

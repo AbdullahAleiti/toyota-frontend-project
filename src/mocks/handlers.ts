@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import terminalsData from "./terminal.json";
 import other from "./other.json";
+import hataListesi from "./HataListesi.json"
 import { TerminalLoginForm } from "../Forms";
 
 export const handlers = [
@@ -38,5 +39,9 @@ export const handlers = [
     } else {
       return HttpResponse.json(other["exampleDefectPage"]["defect-screen"]);
     }
+  }),
+  http.get("https://api.sunucu.com/defects/:filterCode", ({ params }) => {
+    const { filterCode } = params;
+    return HttpResponse.json((hataListesi as any)["data"][0]["defectList"])
   }),
 ];

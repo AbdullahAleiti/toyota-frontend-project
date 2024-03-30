@@ -12,6 +12,7 @@ import {
 } from "react";
 import Select, { FocusHandle } from "../components/Select";
 import Grid from "@mui/material/Unstable_Grid2";
+import InfoBox from "../components/InfoBox";
 
 export const Route = createFileRoute("/defect/$defectId")({
   loader: ({ context: { queryClient }, params: { defectId } }) =>
@@ -38,23 +39,6 @@ const fetchDefect = async (defectId: string) => {
     throw new Error("Error");
   }
 };
-
-const InfoBox = ({
-  title,
-  value,
-  ...props
-}: HTMLAttributes<HTMLDivElement> & {
-  title: string;
-  value: string;
-}) => (
-  <div
-    className="flex flex-col border border-solid border-black px-1"
-    {...props}
-  >
-    <div className="whitespace-nowrap text-center">{title}</div>
-    <div className="mx-auto">{value}</div>
-  </div>
-);
 
 type Props = {
   onClick: (e: MouseEvent<HTMLDivElement>, box: DefectButtonRecord) => void;
@@ -125,8 +109,8 @@ function DefectPage() {
       console.log("clicked image");
       if (imgRef.current) {
         setPointerPosition({
-          top: e.clientY - imgRef.current.getBoundingClientRect().top,
-          left: e.clientX - imgRef.current.getBoundingClientRect().left,
+          top:  Math.floor(e.clientY - imgRef.current.getBoundingClientRect().top),
+          left: Math.floor(e.clientX - imgRef.current.getBoundingClientRect().left),
         });
       }
       setInsert(State.enterLocation);
@@ -281,20 +265,18 @@ function DefectPage() {
             className="max-w-full"
             alignItems={"stretch"}
           >
-            <Box sx={{ flexGrow: 1, width: 0 }}>
-              <Link to="/terminals">
-                <Button variant="outlined" fullWidth>ÇIKIŞ</Button>
-              </Link>
-            </Box>
+            <Link to="/terminals" className=" flex-grow w-0">
+              <Button variant="outlined" fullWidth>ÇIKIŞ</Button>
+            </Link>
             <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
               MODEL İLK RESMİ
             </Button>
             <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
               GERİ
             </Button>
-            <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
-              HATA LİSTESİ
-            </Button>
+            <Link to="/defects/$filterCode" params={{filterCode:"test"}} className=" flex-grow w-0">
+              <Button variant="outlined" fullWidth>HATA LİSTESİ</Button>
+            </Link>
             <Button variant="outlined" sx={{ flexGrow: 1, width: 0 }}>
               TEMİZLE
             </Button>
