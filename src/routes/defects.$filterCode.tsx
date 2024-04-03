@@ -6,11 +6,20 @@ import {
 	useReactTable,
 	getCoreRowModel,
 	Row,
-	flexRender
+	flexRender,
+	getSortedRowModel,
+	SortingState,
+	OnChangeFn
 } from "@tanstack/react-table";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Button, Stack } from "@mui/material";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
 export const Route = createFileRoute("/defects/$filterCode")({
 	loader: ({ context: { queryClient }, params: { filterCode } }) =>
@@ -36,13 +45,14 @@ const fetchDefects = async (filterCode: string) => {
 function DefectTable() {
 	const defects = Route.useLoaderData();
 	const tableContainerRef = useRef<HTMLDivElement>(null);
+	const [sorting, setSorting] = useState<SortingState>([])
 
 	const columns = useMemo<ColumnDef<DefectRecord>[]>(
 		() => [
 			{
 				accessorKey: "depCode",
 				header: "Bildiren",
-				size: 90
+				size: 90,
 			},
 			{
 				accessorKey: "bodyNo",
@@ -60,7 +70,7 @@ function DefectTable() {
 				size: 170
 			},
 			{
-				
+
 				accessorKey: "rgbCode",
 				header: "Renk",
 				cell: (column) => (
@@ -69,25 +79,26 @@ function DefectTable() {
 			},
 			{
 				header: "Kaydet",
-				cell: ({row}) => {
-					return (<Button className=" h-8" variant="contained" onClick={()=>{console.log(row.original.defectId)}}>Kaydet</Button>)
+				cell: ({ row }) => {
+					return (<Button className=" h-8" variant="contained" onClick={() => { console.log(row.original.defectId) }}>Kaydet</Button>)
 				}
 			},
 			{
 				header: "İşlem",
-				cell: ({row})=>{
-					const onEdit = ()=>{
-						console.log("edited ",row.original.defectId)
+				cell: ({ row }) => {
+					const onEdit = () => {
+						console.log("edited ", row.original.defectId)
 					}
-					const onDelete = ()=>{
-						console.log("deleted ",row.original.defectId)
+					const onDelete = () => {
+						console.log("deleted ", row.original.defectId)
 					}
 					return (
 						<Stack direction={"row"} spacing={1}>
 							<Button className="h-8" color="error" variant="contained" onClick={onEdit}>Güncelle</Button>
 							<Button className="h-8" color="error" variant="contained" onClick={onDelete}>Sil</Button>
 						</Stack>)
-				}
+				},
+				size: 210
 			}
 		],
 		[]
@@ -96,10 +107,31 @@ function DefectTable() {
 	const table = useReactTable({
 		data: defects,
 		columns: columns,
+		state: {
+			sorting
+		},
+		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		debugTable: true
 	});
 
-	const { rows } = table.getCoreRowModel();
+	const { rows } = table.getRowModel();
+
+	//scroll to top of table when sorting changes
+	const handleSortingChange: OnChangeFn<SortingState> = updater => {
+		setSorting(updater)
+		if (table.getRowModel().rows.length) {
+			rowVirtualizer.scrollToIndex?.(0)
+		}
+	}
+
+	//since this table option is derived from table row model state, we're using the table.setOptions utility
+	table.setOptions(prev => ({
+		...prev,
+		onSortingChange: handleSortingChange,
+	}))
+
 
 	const rowVirtualizer = useVirtualizer({
 		count: rows.length,
@@ -110,29 +142,27 @@ function DefectTable() {
 				navigator.userAgent.indexOf('Firefox') === -1
 				? element => element?.getBoundingClientRect().height
 				: undefined,
-		overscan: 0,
+		overscan: 20,
 	});
 
 	return (
-		<div ref={tableContainerRef} style={{ height: "600px", overflow: "auto" }}>
-			<table style={{ display: 'grid' }}>
-				<thead
-					style={{
-						display: 'grid',
-						position: 'sticky',
-						top: 0,
-						zIndex: 1,
-						backgroundColor:"white"
-					}}
-				>
+		<div ref={tableContainerRef} style={{ height: "500px", overflow: "auto" }}>
+			{
+			<Table stickyHeader style={{ display: 'grid' }}>
+				<TableHead style={{
+					display: 'grid',
+					position: 'sticky',
+					top: 0,
+					zIndex: 1,
+				}}>
 					{table.getHeaderGroups().map(headerGroup => (
-						<tr
+						<TableRow
 							key={headerGroup.id}
 							style={{ display: 'flex', width: '100%' }}
 						>
 							{headerGroup.headers.map(header => {
 								return (
-									<th
+									<TableCell
 										key={header.id}
 										style={{
 											display: 'flex',
@@ -146,23 +176,24 @@ function DefectTable() {
 													: '',
 												onClick: header.column.getToggleSortingHandler(),
 											}}
+											style={{ overflowX: "visible", height: "24px" }}
 										>
 											{flexRender(
 												header.column.columnDef.header,
 												header.getContext()
 											)}
 											{{
-												asc: ' 🔼',
-												desc: ' 🔽',
+												asc: '🔼',
+												desc: '🔽',
 											}[header.column.getIsSorted() as string] ?? null}
 										</div>
-									</th>
+									</TableCell>
 								)
 							})}
-						</tr>
+						</TableRow>
 					))}
-				</thead>
-				<tbody
+				</TableHead>
+				<TableBody
 					style={{
 						display: 'grid',
 						height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
@@ -172,7 +203,7 @@ function DefectTable() {
 					{rowVirtualizer.getVirtualItems().map(virtualRow => {
 						const row = rows[virtualRow.index] as Row<DefectRecord>
 						return (
-							<tr
+							<TableRow
 								data-index={virtualRow.index} //needed for dynamic row height measurement
 								ref={node => rowVirtualizer.measureElement(node)} //measure dynamic row height
 								key={row.id}
@@ -185,7 +216,7 @@ function DefectTable() {
 							>
 								{row.getVisibleCells().map(cell => {
 									return (
-										<td
+										<TableCell
 											key={cell.id}
 											style={{
 												display: 'flex',
@@ -196,14 +227,15 @@ function DefectTable() {
 												cell.column.columnDef.cell,
 												cell.getContext()
 											)}
-										</td>
+										</TableCell>
 									)
 								})}
-							</tr>
+							</TableRow>
 						)
 					})}
-				</tbody>
-			</table>
+				</TableBody>
+			</Table>
+		}
 		</div>
 	);
 }
