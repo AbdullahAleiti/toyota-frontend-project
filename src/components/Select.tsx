@@ -1,4 +1,4 @@
-import { useEffect, useRef,useState,MouseEvent,forwardRef, RefObject, Ref,useImperativeHandle, CSSProperties} from "react";
+import { useEffect, useRef,useState,forwardRef,useImperativeHandle, CSSProperties} from "react";
 import S, {Props as reactSelectProps,SelectInstance} from "react-select";
 import { useClickOutside } from "../utils";
 import { Button } from '@mui/material'
@@ -26,9 +26,7 @@ const Select = forwardRef<FocusHandle,Props>(({onChange,options,className,onMenu
         };
       },);
 
-    const scrollDown = (e : MouseEvent<HTMLButtonElement>)=>{
-        //e.preventDefault()
-        //e.stopPropagation()
+    const scrollDown = ()=>{
         selectRef.current?.focusOption("pagedown")
         selectRef.current?.focus()
     }
