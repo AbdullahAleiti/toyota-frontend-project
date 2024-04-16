@@ -2,6 +2,20 @@
 
 This project is developed for 32Bit's Toyota frontend developer contest. The purpose of this application is to list factory terminals, list faults and be able to enter faults specifying a location on image.
 
+
+## Getting Started
+
+```sh
+npm install
+npm run dev
+```
+
+## Usage
+
+Use the following credentials for a successful login.\
+`Sicil No: 99619`\
+`Password: 1234`
+
 ## Technical Decisions
 
 While developing this application I tried my best to use the most up-to-date standard tools preferred by developers and enterprises.
@@ -27,13 +41,6 @@ I chose Tanstack router because of it's flexibility, first class typescript supp
 - **react-table** and **react-virtual** for faults page.
 ![alt text](image-1.png)
 - **Axios**
-
-## Getting Started
-
-```sh
-npm install
-npm run dev
-```
 
 ## Roadmap
 
