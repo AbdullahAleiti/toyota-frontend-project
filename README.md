@@ -12,11 +12,11 @@ By utilizing Typescript, I believe that the DX (Developer Experience) will be im
 
 ### Tanstack Router for Routing
 
-I choose Tanstack router because of it's flexibility, first class typescript support, easy to use API and the clean project structure that it permits.
+I chose Tanstack router because of it's flexibility, first class typescript support, easy to use API and the clean project structure that it permits.
 
 ### MSWJS.io
 
-**Mock Service Worker** is an API mocking library that allows us to write client-agnostic mocks and reuse them across any environments. It works by intercepting http request in Browser's service worker. Using Mock service worker we are able to mock api without adding any adapters in our code. and without having to create a mock database in our environment.
+**Mock Service Worker** is an API mocking library that allows us to write client-agnostic mocks and reuse them across any environments. It works by intercepting http request in Browser's service worker. By using mock service worker we are able to mock api without adding any adapters in our code. and without having to create a mock database in our environment.
 
 ### Other
 
