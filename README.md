@@ -16,7 +16,7 @@ I choose Tanstack router because of it's flexibility, first class typescript sup
 
 ### MSWJS.io
 
-Mock Service Worker is an API mocking library that allows us to write client-agnostic mocks and reuse them across any environments. It works by intercepting http request in Browser's service worker. Using Mock service worker we are able to mock api without adding any adapters in our code. and without having to create a mock database in our environment.
+**Mock Service Worker** is an API mocking library that allows us to write client-agnostic mocks and reuse them across any environments. It works by intercepting http request in Browser's service worker. Using Mock service worker we are able to mock api without adding any adapters in our code. and without having to create a mock database in our environment.
 
 ### Other
 
@@ -27,6 +27,13 @@ Mock Service Worker is an API mocking library that allows us to write client-agn
 - **react-table** and **react-virtual** for faults page.
 ![alt text](image-1.png)
 - **Axios**
+
+## Getting Started
+
+```sh
+npm install
+npm run dev
+```
 
 ## Roadmap
 
