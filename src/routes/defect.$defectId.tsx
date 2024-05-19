@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Button, Stack, Box } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import axios from "axios";
 import { DefectHeader, DefectButtonRecord, Defects } from "../Domain";
 import {
@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useEffect,
-  HTMLAttributes,
   MouseEvent,
 } from "react";
 import Select, { FocusHandle } from "../components/Select";
@@ -82,7 +81,7 @@ enum State {
 
 function DefectPage() {
   const { defectHeader, defectScreen } = Route.useLoaderData();
-  const [insert, setInsert] = useState<State>(State.selectBox);
+  const [state, setState] = useState<State>(State.selectBox);
   const selectRef = useRef<FocusHandle>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
@@ -96,7 +95,7 @@ function DefectPage() {
 
   const buttonClick = (e: MouseEvent, box: DefectButtonRecord) => {
     if (box.boxColor !== "blue") {
-      setInsert(State.selectDefectType);
+      setState(State.selectDefectType);
       setMenuPosition({
         top: box.boxY + box.boxHeight,
         left: box.boxX,
@@ -105,7 +104,7 @@ function DefectPage() {
   };
 
   const onImageClick = (e: MouseEvent) => {
-    if (is(State.enterLocation)) {
+    if (isInState(State.enterLocation)) {
       console.log("clicked image");
       if (imgRef.current) {
         setPointerPosition({
@@ -113,13 +112,13 @@ function DefectPage() {
           left: Math.floor(e.clientX - imgRef.current.getBoundingClientRect().left),
         });
       }
-      setInsert(State.enterLocation);
+      setState(State.enterLocation);
     }
   };
 
-  const is = (states: State[] | State) => {
-    if (Array.isArray(states)) return states.includes(insert);
-    else return insert == states;
+  const isInState = (states: State[] | State) => {
+    if (Array.isArray(states)) return states.includes(state);
+    else return state == states;
   };
 
   const submitDefect = () => {
@@ -130,7 +129,7 @@ function DefectPage() {
         defectType: form.defectType,
       })
     );
-    setInsert(State.selectBox);
+    setState(State.selectBox);
   };
 
   // TODO Test if useMemo is really required here!
@@ -144,11 +143,11 @@ function DefectPage() {
   );
 
   useEffect(() => {
-    switch (insert) {
+    switch (state) {
       case State.selectDefectType:
         selectRef.current?.focus();
     }
-  }, [insert]);
+  }, [state]);
 
   return (
     <>
@@ -186,7 +185,7 @@ function DefectPage() {
               src={`/src/mocks/${defectScreen.terminalPictureId}.jpg`}
               onClick={onImageClick}
             />
-            {is(State.enterLocation) && (
+            {isInState(State.enterLocation) && (
               <img
                 src="/src/pointer.png"
                 style={{
@@ -198,7 +197,7 @@ function DefectPage() {
                 }}
               />
             )}
-            {!is(State.enterLocation) &&
+            {!isInState(State.enterLocation) &&
               defectScreen.defectButtonRecords.map((box, id) => (
                 <Link
                   key={id}
@@ -209,7 +208,7 @@ function DefectPage() {
                   <DefectBox box={box} onClick={(e) => buttonClick(e, box)} />
                 </Link>
               ))}
-            {insert == State.selectDefectType && (
+            {state == State.selectDefectType && (
               <Select
                 menuIsOpen={true}
                 ref={selectRef}
@@ -222,12 +221,12 @@ function DefectPage() {
                   left: menuPosition.left,
                 }}
                 onChange={(n, m) => {
-                  setInsert(State.enterLocation);
+                  setState(State.enterLocation);
                   setForm({ defectType: (n as DefectOptions).value });
                   console.log("selected: ", (n as DefectOptions).value);
                 }}
                 onClickOutside={() => {
-                  setInsert(State.selectBox);
+                  setState(State.selectBox);
                 }}
               />
             )}
@@ -244,7 +243,7 @@ function DefectPage() {
               </Button>
               <Button
                 variant="outlined"
-                disabled={!(insert == State.enterLocation)}
+                disabled={!(state == State.enterLocation)}
                 onClick={submitDefect}
               >
                 HATA KAYIT
@@ -286,7 +285,7 @@ function DefectPage() {
           </Stack>
         </Grid>
         <Grid xs={2}>
-          {is([State.waitingSubmit, State.enterLocation]) && (
+          {isInState([State.waitingSubmit, State.enterLocation]) && (
             <h2 className="font-bold text-center max-w-full text-red-600">
               {form.defectType}
             </h2>

@@ -11,15 +11,13 @@ import {
 	getSortedRowModel,
 	SortingState,
 	OnChangeFn,
-	ColumnFiltersState,
 	getFilteredRowModel,
-	Column,
 	CoreInstance
 } from "@tanstack/react-table";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { Button, Input, Stack, TextField } from "@mui/material";
-import Table, { TableTypeMap, TableClasses } from '@mui/material/Table';
+import { Button, Stack, TextField } from "@mui/material";
+import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';

@@ -1,10 +1,9 @@
-import { Department, FilterBased, Terminal } from "../Domain";
+import { Department, FilterBased } from "../Domain";
 import {
   getCoreRowModel,
   ColumnDef,
   flexRender,
   useReactTable,
-  Cell,
 } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -117,7 +116,7 @@ function Terminals() {
     data: filteredData,
     getCoreRowModel: getCoreRowModel(),
   });
-  if (filteredData.length < 1) return <div>Never mind!</div>;
+  
   return (
     <TableContainer>
       <Table style={{ width: "90%", textAlign: "center" }}>

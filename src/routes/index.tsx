@@ -1,8 +1,7 @@
-import { createFileRoute, createRootRouteWithContext, Outlet ,redirect} from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import { createFileRoute ,redirect} from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
-  loader:()=>{
+  beforeLoad: async ()=>{
     throw redirect({to:'/terminals'})
   }
 })

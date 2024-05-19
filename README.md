@@ -2,7 +2,6 @@
 
 This project is developed for 32Bit's Toyota frontend developer contest. The purpose of this application is to list factory terminals, list faults and be able to enter faults specifying a location on image.
 
-
 ## Getting Started
 
 ```sh
@@ -22,7 +21,7 @@ While developing this application I tried my best to use the most up-to-date sta
 
 ### Typescript
 
-By utilizing Typescript, I believe that the DX (Developer Experience) will be improved by a big margin. Typescript is supported by a lot of libraries which will let the IDE to suggest autocomplete almost everywhere in our code as if we are developing in a statically typed language. Which will improve DX and reduce development times.
+Utilizing TypeScript is anticipated to significantly enhance the developer experience (DX). The extensive library support for TypeScript allows integrated development environments (IDEs) to provide comprehensive autocomplete functionality, akin to developing in a statically typed language. This improvement in DX is expected to streamline development processes and reduce overall development time.
 
 ### Tanstack Router for Routing
 
@@ -44,6 +43,7 @@ I chose Tanstack router because of it's flexibility, first class typescript supp
 
 ## Roadmap
 
+- [ ] Add tests
 - [ ] Add i18n
 - [ ] Add virtual keyboard
 
