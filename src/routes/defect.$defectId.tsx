@@ -182,12 +182,12 @@ function DefectPage() {
             <img
               ref={imgRef}
               className="w-max"
-              src={`/src/mocks/${defectScreen.terminalPictureId}.jpg`}
+              src={`/img/${defectScreen.terminalPictureId}.jpg`}
               onClick={onImageClick}
             />
             {isInState(State.enterLocation) && (
               <img
-                src="/src/pointer.png"
+                src="/img/pointer.png"
                 style={{
                   position: "absolute",
                   top: pointerPosition.top,
